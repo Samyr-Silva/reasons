@@ -35,10 +35,15 @@ const introScreen = document.getElementById("intro-screen");
 const startBtn = document.getElementById("start-btn");
 
 // Tela inicial
-startBtn.onclick = () => {
+startBtn.addEventListener("click", startExperience);
+startBtn.addEventListener("touchstart", startExperience);
+
+function startExperience(e) {
+    e.preventDefault(); // evita qualquer comportamento padrão do toque
     introScreen.style.display = "none";
     initCards();
-};
+    startContinuousHearts();
+}
 
 // Criar cards
 function initCards() {
@@ -56,11 +61,11 @@ function initCards() {
         card.onclick = () => {
             card.classList.toggle("flip");
 
-            // Último card: mostrar popup e corações
+            // Último card: mostrar popup e confete
             if (i === motivos.length - 1) {
                 setTimeout(() => {
                     finalPopup.classList.add("show");
-                    createHearts();
+                    createConfete();
                 }, 6000);
             }
         };
@@ -74,17 +79,29 @@ closePopup.onclick = () => {
     finalPopup.classList.remove("show");
 };
 
-// Função para criar corações caindo
-function createHearts() {
-    for (let i = 0; i < 150; i++) {
+// Corações contínuos
+function startContinuousHearts() {
+    setInterval(() => {
         const heart = document.createElement("div");
         heart.className = "heart";
         heart.style.left = Math.random() * window.innerWidth + "px";
         heart.style.animationDuration = 3 + Math.random() * 2 + "s";
         heartsContainer.appendChild(heart);
 
-        setTimeout(() => {
-            heart.remove();
-        }, 5000);
+        setTimeout(() => heart.remove(), 5000);
+    }, 200);
+}
+
+// Confete rosa
+function createConfete() {
+    for (let i = 0; i < 50; i++) {
+        const confete = document.createElement("div");
+        confete.className = "confete";
+        confete.style.left = Math.random() * window.innerWidth + "px";
+        confete.style.backgroundColor = `hsl(${Math.random()*360}, 70%, 70%)`;
+        confete.style.animationDuration = 2 + Math.random()*2 + "s";
+        heartsContainer.appendChild(confete);
+
+        setTimeout(() => confete.remove(), 4000);
     }
 }
